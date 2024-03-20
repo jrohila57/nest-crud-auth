@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../constants/index';
 import { databaseConfig } from './database.config';
+import { Users } from 'src/modules/users/model/users.model';
 
 export const databaseProviders = [
   {
@@ -22,7 +23,7 @@ export const databaseProviders = [
             config = databaseConfig.development;
         }
         const sequelize = new Sequelize(config);
-        sequelize.addModels([]);
+        sequelize.addModels([Users]);
         await sequelize.authenticate();
         await sequelize.sync();
         console.log('Connection has been established successfully.');
