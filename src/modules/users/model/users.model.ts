@@ -1,4 +1,5 @@
 import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { ADMIN, FEMALE, MALE, OTHER, USER } from 'src/core/constants';
 
 @Table
 export class Users extends Model<Users> {
@@ -35,15 +36,15 @@ export class Users extends Model<Users> {
 
   @Column({
     type: DataType.ENUM,
-    values: ['admin', 'user'],
-    defaultValue: 'user',
+    values: [ADMIN, USER],
+    defaultValue: USER,
   })
   role: string;
 
   @Column({
     type: DataType.ENUM,
-    values: ['male', 'female', 'other'],
-    allowNull: false,
+    values: [MALE, FEMALE, OTHER],
+    allowNull: true,
   })
   gender: string;
 
