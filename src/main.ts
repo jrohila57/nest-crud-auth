@@ -5,6 +5,11 @@ config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  try {
+    await app.listen(process.env.PORT);
+    console.log(`Successfully started on port:${process.env.PORT}`);
+  } catch (error) {
+    console.error(error);
+  }
 }
 bootstrap();
