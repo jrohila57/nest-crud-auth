@@ -6,7 +6,8 @@ import {
   Put,
   Param,
   Delete,
-  Bind,
+  ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUsersDto } from './dto/create.dto';
@@ -16,37 +17,57 @@ import { UpdateUsersDto } from './dto/update.dto';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Post()
-  @Bind(Body())
-  async create(createUsersDto: CreateUsersDto) {
-    const user = await this.usersService.create(createUsersDto);
-    return user;
-  }
-
   @Get()
   async findAll() {
-    const users = await this.usersService.findAll();
-    return users;
+    try {
+      const users = await this.usersService.findAll();
+      return { success: true, data: users };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   }
 
   @Get(':id')
-  @Bind(Param('id'))
-  async findOne(id: number) {
-    const user = await this.usersService.findOneById(id);
-    return user;
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    try {
+      const user = await this.usersService.findOneById(id);
+      if (!user) throw new Error('User not found');
+      return { success: true, data: user };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+
+  @Post()
+  async create(@Body(new ValidationPipe()) createUsersDto: CreateUsersDto) {
+    try {
+      const user = await this.usersService.create(createUsersDto);
+      return { success: true, data: user };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   }
 
   @Put(':id')
-  @Bind(Param('id'), Body())
-  async update(id: number, updateUserDto: UpdateUsersDto) {
-    const user = await this.usersService.UpdateOneById(id, updateUserDto);
-    return user;
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body(new ValidationPipe()) updateUserDto: UpdateUsersDto,
+  ) {
+    try {
+      const user = await this.usersService.updateOneById(id, updateUserDto);
+      return { success: true, data: user };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   }
 
   @Delete(':id')
-  @Bind(Param('id'))
-  async remove(id: number) {
-    const user = await this.usersService.DeleteOneById(id);
-    return user;
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    try {
+      const user = await this.usersService.deleteOneById(id);
+      return { success: true, data: user };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   }
 }

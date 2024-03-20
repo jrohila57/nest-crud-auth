@@ -11,21 +11,56 @@ export class UsersService {
   ) {}
 
   async create(user: CreateUsersDto): Promise<Users> {
-    return await this.usersProviders.create(user);
+    try {
+      return await this.usersProviders.create(user);
+    } catch (error) {
+      throw new Error(`Error creating user: ${error.message}`);
+    }
   }
+
   async findAll(): Promise<Users[]> {
-    return await this.usersProviders.findAll();
+    try {
+      return await this.usersProviders.findAll();
+    } catch (error) {
+      throw new Error(`Error finding all users: ${error.message}`);
+    }
   }
+
   async findOneByEmail(email: string): Promise<Users> {
-    return await this.usersProviders.findOne({ where: { email } });
+    try {
+      return await this.usersProviders.findOne({ where: { email } });
+    } catch (error) {
+      throw new Error(`Error finding user by email: ${error.message}`);
+    }
   }
+
   async findOneById(id: number): Promise<Users> {
-    return await this.usersProviders.findOne({ where: { id } });
+    try {
+      return await this.usersProviders.findOne({ where: { id } });
+    } catch (error) {
+      throw new Error(`Error finding user by ID: ${error.message}`);
+    }
   }
-  async UpdateOneById(id: number, user: UpdateUsersDto): Promise<Users> {
-    return await this.usersProviders.update({ ...user }, { where: { id } })[0];
+
+  async updateOneById(id: number, user: UpdateUsersDto): Promise<Users> {
+    try {
+      const updatedUser = await this.usersProviders.update(user, {
+        where: { id },
+      })[0];
+      return updatedUser;
+    } catch (error) {
+      throw new Error(`Error updating user by ID: ${error.message}`);
+    }
   }
-  async DeleteOneById(id: number): Promise<Users> {
-    return await this.usersProviders.destroy({ where: { id } })[0];
+
+  async deleteOneById(id: number): Promise<Users> {
+    try {
+      const deletedUser = await this.usersProviders.destroy({
+        where: { id },
+      })[0];
+      return deletedUser;
+    } catch (error) {
+      throw new Error(`Error deleting user by ID: ${error.message}`);
+    }
   }
 }
