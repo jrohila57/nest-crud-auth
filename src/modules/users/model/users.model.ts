@@ -32,11 +32,6 @@ export class Users extends Model<Users> {
     unique: true,
   })
   phone: number;
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  name: string;
 
   @Column({
     type: DataType.ENUM,
